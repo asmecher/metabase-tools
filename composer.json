@@ -1,0 +1,7 @@
+{
+    "require": {
+        "illuminate/database": "^10.48",
+        "doctrine/dbal": "*",
+        "hidehalo/nanoid-php": "^1.1"
+    }
+}
