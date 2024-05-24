@@ -1,26 +1,35 @@
 <?php
 
+// Database connection defaults
+$dbDefaults = [
+    'driver' => 'mysql',
+    'host' => 'localhost',
+    'charset' => 'utf8',
+    'collation' => 'utf8_unicode_ci',
+    'prefix' => '',
+];
+
 return [
     'journalPath' => 'rlae',
     'databases' => [
 	// This is the multi-journal installation
-	'multi' => [
+	'multi' => array_merge($dbDefaults, [
 	    'database' => 'scielo',
 	    'username' => 'scielo',
 	    'password' => 'scielo',
-	],
+	]),
 	// This is the virtual single-journal database that contains the views
-	'single' => [
+	'single' => array_merge($dbDefaults, [
 	    'database' => 'rlae',
 	    'username' => 'rlae',
 	    'password' => 'rlae',
-	],
+	]),
 	// This is the Metabase database
-	'metabase' => [
+	'metabase' => array_merge($dbDefaults, [
 	    'database' => 'metabase',
 	    'username' => 'metabase',
 	    'password' => 'metabase',
-	],
+	]),
     ],
     'foreignKeys' => [
 	'author_settings.author_id' => 'authors.author_id',

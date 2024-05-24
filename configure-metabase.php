@@ -22,18 +22,7 @@ $nanoClient = new Client();
 // Establish the database connections
 $capsule = new Capsule;
 foreach ($config['databases'] as $name => $dbConfig) {
-    $capsule->addConnection(
-	array_merge(
-	    [
-		'driver' => 'mysql',
-		'host' => 'localhost',
-		'charset' => 'utf8',
-		'collation' => 'utf8_unicode_ci',
-		'prefix' => '',
-	    ],
-	    $dbConfig
-	), $name
-    );
+    $capsule->addConnection($dbConfig, $name);
 }
 
 $singleConnection = $capsule->getConnection('single');
