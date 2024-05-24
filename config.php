@@ -10,7 +10,11 @@ $dbDefaults = [
 ];
 
 return [
-    'journalPath' => 'rlae',
+    'metabase' => [
+	'baseUrl' => 'http://localhost:3000',
+	'apiKey' => getenv('METABASE_API_KEY'),
+    ],
+    'journalPath' => getenv('JOURNAL_PATH'),
     'databases' => [
 	// This is the multi-journal installation
 	'multi' => array_merge($dbDefaults, [
@@ -20,9 +24,9 @@ return [
 	]),
 	// This is the virtual single-journal database that contains the views
 	'single' => array_merge($dbDefaults, [
-	    'database' => 'rlae',
-	    'username' => 'rlae',
-	    'password' => 'rlae',
+	    'database' => getenv('JOURNAL_PATH'),
+	    'username' => getenv('JOURNAL_PATH'),
+	    'password' => getenv('JOURNAL_PATH'),
 	]),
 	// This is the Metabase database
 	'metabase' => array_merge($dbDefaults, [
