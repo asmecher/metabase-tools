@@ -1,6 +1,6 @@
 <?php
 
-// Database connection defaults
+// Database connection defaults. You probably don't have to change these.
 $dbDefaults = [
     'driver' => 'mysql',
     'host' => 'localhost',
@@ -10,10 +10,12 @@ $dbDefaults = [
 ];
 
 return [
+    // Your Metabase information.
     'metabase' => [
 	'baseUrl' => 'http://localhost:3000',
 	'apiKey' => getenv('METABASE_API_KEY'),
     ],
+    // The journal path that you wish to expose via views for Metabase to analyze.
     'journalPath' => getenv('JOURNAL_PATH'),
     'databases' => [
 	// This is the multi-journal installation
@@ -35,6 +37,8 @@ return [
 	    'password' => 'metabase',
 	]),
     ],
+    // A list of foreign keys that should be configured in Metabase.
+    // Syntax: 'foreign_table.foreign_column' => 'primary_table.primary_column'
     'foreignKeys' => [
 	'author_settings.author_id' => 'authors.author_id',
 	'authors.user_group_id' => 'user_groups.user_group_id',
@@ -62,6 +66,10 @@ return [
 	'user_user_groups.user_id' => 'users.user_id',
 	'user_user_groups.user_group_id' => 'users.user_group_id',
     ],
+    // A list of enumerations that should be configured with human-readable labels in Metabase.
+    // Syntax: 'table_name.column_name' => [
+    //     constant_value => 'Human readable label'
+    // ]
     'enumerations' => [
 	'user_groups.role_id' => [
 	    16 => 'Manager',
