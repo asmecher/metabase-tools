@@ -10,7 +10,7 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 $config = require_once('config.php');
 
 // Used just for esacaping
-$mysqli = new mysqli($config['databases']['single']['host'], $config['databases']['single']['username'], $config['databases']['single']['password'], $config['databases']['single']['database']);
+$mysqli = new mysqli($config['databases']['multi']['host'], $config['databases']['multi']['username'], $config['databases']['multi']['password'], $config['databases']['multi']['database']);
 
 $multiDatabaseName = $config['databases']['multi']['database'];
 
