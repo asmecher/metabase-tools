@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Configure a Metabase database for use with a single-journal view of a multi-journal OJS installation.
+ * This provides Metabase with configuration that it can't automatically extract from the database schema
+ * because the schema is based on views (or because foreign key constraints don't exist in the case of
+ * OJS 3.3.0).
+ */
+
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -90,11 +97,13 @@ foreach ($config['foreignKeys'] as $foreignSpec => $primarySpec) {
     if ($count) echo " - $foreignSpec => $primarySpec\n";
 }
 
+// For each view in the single-journal installation, configure any enumeration columns.
 echo "Setting up enumerations in Metabase...\n";
 foreach ($config['enumerations'] as $columnSpec => $valueMap) {
     list($tableName, $columnName) = explode('.', $columnSpec);
 
-    // Configure the metabase_fieldvalues and metabase_field entries
+    // Configure the metabase_fieldvalues and metabase_field entries. This is where
+    // the list of possible options (and human-readable mappings) are entered.
     $count = $metabaseConnection
 	->table('metabase_fieldvalues AS fv')
 	->join('metabase_field AS f', 'fv.field_id', '=', 'f.id')
@@ -111,7 +120,8 @@ foreach ($config['enumerations'] as $columnSpec => $valueMap) {
 
     if ($count) echo " - $columnSpec field values and field configured\n";
 
-    // Configure the dimensions entry
+    // Configure the dimensions entry. This tells Metabase to present the user with
+    // the human-readable forms.
     $result = $metabaseConnection
 	->table('metabase_field AS f')
 	->join('metabase_table AS t', 'f.table_id', '=', 't.id')
@@ -129,12 +139,7 @@ foreach ($config['enumerations'] as $columnSpec => $valueMap) {
 	    'field_id' => $row->field_id,
 	    'name' => $row->field_name,
 	    'type' => 'internal',
-	    'entity_id' => $nanoClient->generateId(21),
-/*
-| id | field_id | name    | type     | human_readable_field_id | created_at                 | updated_at                 | entity_id             |
-+----+----------+---------+----------+-------------------------+----------------------------+----------------------------+-----------------------+
-|  5 |     2576 | Role ID | internal |                    NULL | 2024-04-19 08:33:03.590773 | 2024-04-19 08:33:03.590773 | VfMMmULPpZ-gDURokns1R |
- */
+	    'entity_id' => $nanoClient->generateId(21), // This is a unique ID for import/export purposes
 	]);
 	echo " - $columnSpec received a new dimensions entry\n";
     }
