@@ -65,13 +65,22 @@ return [
 	'user_groups.context_id' => 'journals.journal_id',
 	'user_settings.user_id' => 'users.user_id',
 	'user_user_groups.user_id' => 'users.user_id',
-	'user_user_groups.user_group_id' => 'users.user_group_id',
+	'user_user_groups.user_group_id' => 'user_groups.user_group_id',
     ],
     // A list of enumerations that should be configured with human-readable labels in Metabase.
     // Syntax: 'table_name.column_name' => [
     //     constant_value => 'Human readable label'
     // ]
     'enumerations' => [
+	'journals.enabled' => [0 => 'false', 1 => 'true'],
+	'authors.include_in_browse' => [0 => 'false', 1 => 'true'],
+	'issues.published' => [0 => 'false', 1 => 'true'],
+	'issues.show_volume' => [0 => 'false', 1 => 'true'],
+	'issues.show_number' => [0 => 'false', 1 => 'true'],
+	'issues.show_year' => [0 => 'false', 1 => 'true'],
+	'issues.show_title' => [0 => 'false', 1 => 'true'],
+	'issues.access_status' => [1 => 'Open Access', 1 => 'Subscription'],
+	'publications.access_status' => [0 => 'Issue Default', 1 => 'Open Access'],
 	'user_groups.role_id' => [
 	    16 => 'Manager',
 	    17 => 'Section Editor',
@@ -85,6 +94,16 @@ return [
 	'user_groups.show_title' => [0 => 'false', 1 => 'true'],
 	'user_groups.permit_self_registration' => [0 => 'false', 1 => 'true'],
 	'user_groups.permit_metadata_edit' => [0 => 'false', 1 => 'true'],
+	'sections.editor_restricted' => [0 => 'false', 1 => 'true'],
+	'sections.meta_indexed' => [0 => 'false', 1 => 'true'],
+	'sections.abstracts_not_required' => [0 => 'false', 1 => 'true'],
+	'sections.hide_title' => [0 => 'false', 1 => 'true'],
+	'sections.meta_reviewed' => [0 => 'false', 1 => 'true'],
+	'sections.hide_author' => [0 => 'false', 1 => 'true'],
+	'sections.is_inactive' => [0 => 'false', 1 => 'true'],
+	'stage_assignments.recommend_only' => [0 => 'false', 1 => 'true'],
+	'stage_assignments.can_change_metadata' => [0 => 'false', 1 => 'true'],
+	'submissions.work_type' => [0 => 'Article/Preprint', 1 => 'Edited Volume', 2 => 'Authored Work'],
 	'submissions.status' => [
 	    1 => 'Queued',
 	    3 => 'Published',
@@ -122,6 +141,9 @@ return [
 	    5 => 'Production',
 	],
 	'submissions.stage_id' => $submissionStageIds,
+	'users.must_change_password' => [0 => 'false', 1 => 'true'],
+	'users.disabled' => [0 => 'false', 1 => 'true'],
+	'users.inline_help' => [0 => 'false', 1 => 'true'],
     ],
 ];
 
