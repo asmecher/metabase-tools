@@ -81,6 +81,10 @@ return [
 	    1048576 => 'Reader',
 	    2097152 => 'Subscription Manager',
 	],
+	'user_groups.is_default' => [0 => 'false', 1 => 'true'],
+	'user_groups.show_title' => [0 => 'false', 1 => 'true'],
+	'user_groups.permit_self_registration' => [0 => 'false', 1 => 'true'],
+	'user_groups.permit_metadata_edit' => [0 => 'false', 1 => 'true'],
 	'submissions.status' => [
 	    1 => 'Queued',
 	    3 => 'Published',
