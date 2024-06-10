@@ -45,5 +45,5 @@ CREATE OR REPLACE VIEW user_user_groups AS SELECT uug.* FROM {$multiDatabaseName
 $columns = array_filter(array_map(fn($c) => $c->getName() != 'password' ? $c->getName() : null, $sm->listTableColumns('users')));
 echo "CREATE OR REPLACE VIEW users AS SELECT u." . implode(', u.', $columns) . " FROM {$multiDatabaseName}.users AS u WHERE u.user_id IN (SELECT user_id FROM user_user_groups);\n";
 
-echo "CREATE OR REPLACE VIEW user_settings AS SELECT us.* FROM {$multiDatabaseName}.user_settings AS us JOIN users u ON (us.user_id = u.user_id);
+echo "CREATE OR REPLACE VIEW user_settings AS SELECT us.* FROM {$multiDatabaseName}.user_settings AS us JOIN users u ON (us.user_id = u.user_id) WHERE setting_name NOT IN ('orcidAccessExpiresOn', 'orcidAccessScope', 'orcidAccessToken', 'orcidRefreshToken', 'orcidSandbox', 'apiKey', 'apiKeyEnabled');
 ";
