@@ -19,14 +19,14 @@ echo "Creating Metabase database for {$config['journalPath']}...\n";
 $response = $client->request('POST', '/api/database', [
     'headers' => $headers,
     'json' => [
-    'engine' => 'mysql',
-    'name' => $config['journalPath'],
-    'details' => [
+        'engine' => 'mysql',
+        'name' => $config['journalPath'],
+        'details' => [
             'host' => $config['databases']['single']['host'],
             'db' => $config['databases']['single']['database'],
             'user' => $config['databases']['single']['username'],
             'password' => $config['databases']['single']['password'],
-    ],
+        ],
     ],
 ]);
 if ($code = $response->getStatusCode() != 200) {

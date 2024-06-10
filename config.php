@@ -13,7 +13,8 @@ return [
     // Your Metabase information.
     'metabase' => [
 	'baseUrl' => 'http://localhost:3000',
-	'apiKey' => getenv('METABASE_API_KEY'),
+	'apiKey' => getenv('METABASE_API_KEY'), // This can be created in Metabase
+	'mbApiKey' => getenv('METABASE_MB_API_KEY'), // This must be provided to Metabase as MB_API_KEY environment variable
     ],
     // The journal path that you wish to expose via views for Metabase to analyze.
     'journalPath' => getenv('JOURNAL_PATH'),
