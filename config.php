@@ -47,7 +47,7 @@ return [
 	'edit_decisions.editor_id' => 'users.user_id',
 	'edit_decisions.review_round_id' => 'review_rounds.review_round_id',
 	'issues.journal_id' => 'journals.journal_id',
-	'journal_settings' => 'journals.journal_id',
+	'journal_settings.journal_id' => 'journals.journal_id',
 	'journals.current_issue_id' => 'issues.issue_id',
 	'publication_settings.publication_id' => 'publications.publication_id',
 	'publications.primary_contact_id' => 'users.user_id',
