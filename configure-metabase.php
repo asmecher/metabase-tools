@@ -13,10 +13,10 @@ use Illuminate\Support\Facades\Schema;
 use Hidehalo\Nanoid\Client;
 
 require_once('vendor/autoload.php');
-require_once('functions.php');
+require_once('includes/functions.php');
 
 // Load the configuration file
-$config = require_once('config.php');
+$config = require_once('config/config.php');
 
 $nanoClient = new Client();
 

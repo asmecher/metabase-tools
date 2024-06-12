@@ -9,7 +9,7 @@ use GuzzleHttp\Client;
 require_once('vendor/autoload.php');
 
 // Load the configuration file
-$config = require_once('config.php');
+$config = require_once('config/config.php');
 
 $client = new Client(['base_uri' => $config['metabase']['baseUrl']]);
 $headers = ['x-api-key' => $config['metabase']['apiKey']];

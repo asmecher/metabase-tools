@@ -9,10 +9,10 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 require_once('vendor/autoload.php');
-require_once('functions.php');
+require_once('includes/functions.php');
 
 // Load the configuration file
-$config = require_once('config.php');
+$config = require_once('config/config.php');
 
 // Establish the database connection
 $capsule = new Capsule;

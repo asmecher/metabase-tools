@@ -2,7 +2,7 @@
 Configuration tools for Metabase when working with SciELO journals
 
 To use:
-1. Configure `config.php` with details from your environment.
+1. Configure `config/config.php` with details from your environment.
 2. Use `generate-views.sql` (adapted as necessary) to create a database with a set of views in it:
    1. Generate the SQL:
       ```

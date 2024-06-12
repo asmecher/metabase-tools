@@ -9,7 +9,7 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 require_once('vendor/autoload.php');
 
 // Load the configuration file
-$config = require_once('config.php');
+$config = require_once('config/config.php');
 
 // Establish the database connection for multijournal installation
 $capsule = new Capsule;
