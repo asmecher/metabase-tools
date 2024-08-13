@@ -1,5 +1,7 @@
 # metabase-tools
-Configuration tools for Metabase when working with SciELO journals
+Configuration tools for Metabase when working with large journal collections without a common editorial team.
+
+In a hosting environment that uses OJS installations with multiple journals, hosts might want to support Metabase as a way for editors to build and run reports or explore the workflow data. However, hosts need to ensure that data from other journals is not exposed to editors. This toolset uses views to segment the main OJS database into derived databases that Metabase can explore freely without exposing unwanted data.
 
 To use:
 1. Configure `config/config.php` with details from your environment.
