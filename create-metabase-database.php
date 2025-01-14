@@ -35,8 +35,8 @@ if ($code = $response->getStatusCode() != 200) {
     exit();
 }
 $json = json_decode($response->getBody());
-$databaseId = $json->id;
-echo "Done! URL: {$config['metabase']['baseUrl']}/admin/databases/{$databaseId}\n";
+$newDatabaseId = $json->id;
+echo "Done! URL: {$config['metabase']['baseUrl']}/admin/databases/{$newDatabaseId}\n";
 
 // Create the user group in Metabase.
 echo "Creating group...\n";
@@ -76,22 +76,34 @@ if ($code = $response->getStatusCode() != 200) {
 $graph = json_decode($response->getBody());
 
 // Remove self-serve permissions for All Users
-$graph->groups->$allUsersGroupId->$databaseId = (object) [
-    'data' => [
-        'schemas' => 'none',
-        'native' => 'none',
+$graph->groups->$allUsersGroupId->$newDatabaseId = (object) [
+    'create-queries' => 'no',
+    'download' => (object) [
+        'schemas' => 'full',
     ],
+    'view-data' => 'unrestricted',
 ];
 
-// Grant permission for the new group to the new database
-$graph->groups->$groupId = (object) [
-    $databaseId => [
-        'data' => [
-            'schemas' => 'all',
-            'native' => 'write',
-        ],
-    ],
-];
+// Grant permissions for the new group to the new database, and revoke anything else
+foreach ($graph->groups->$groupId as $databaseId => $databasePermissions) {
+    if ($databaseId != $newDatabaseId) {
+        $graph->groups->$groupId->$databaseId = (object) [
+            'create-queries' => 'no',
+            'download' => (object) [
+                'schemas' => 'full',
+            ],
+            'view-data' => 'unrestricted',
+        ];
+    } else {
+        $graph->groups->$groupId->$databaseId = (object) [
+            'download' => (object) [
+                'schemas' => 'full',
+            ],
+            'view-data' => 'unrestricted',
+            'create-queries' => 'query-builder-and-native',
+        ];
+    }
+}
 
 // Post the modified permissions back to Metabase.
 echo "Posting modified permissions...\n";
