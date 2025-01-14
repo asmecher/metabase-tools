@@ -28,6 +28,7 @@ CREATE OR REPLACE VIEW submissions AS SELECT s.* FROM {$multiDatabaseName}.submi
 CREATE OR REPLACE VIEW submission_settings AS SELECT ss.* FROM {$multiDatabaseName}.submission_settings AS ss JOIN submissions AS s ON (ss.submission_id = s.submission_id);
 CREATE OR REPLACE VIEW publications AS SELECT p.* FROM {$multiDatabaseName}.publications AS p JOIN submissions AS s ON (p.submission_id = s.submission_id);
 CREATE OR REPLACE VIEW publication_settings AS SELECT ps.* FROM {$multiDatabaseName}.publication_settings AS ps JOIN publications AS p ON (ps.publication_id = p.publication_id);
+CREATE OR REPLACE VIEW review_rounds AS SELECT rr.* FROM {$multiDatabaseName}.review_rounds AS rr JOIN submissions AS s ON (rr.submission_id = s.submission_id);
 CREATE OR REPLACE VIEW authors AS SELECT a.* FROM {$multiDatabaseName}.authors AS a JOIN publications AS p ON (a.publication_id = p.publication_id);
 CREATE OR REPLACE VIEW author_settings AS SELECT a_s.* FROM {$multiDatabaseName}.author_settings AS a_s JOIN authors AS a ON (a_s.author_id = a.author_id);
 CREATE OR REPLACE VIEW edit_decisions AS SELECT ed.* FROM {$multiDatabaseName}.edit_decisions AS ed JOIN submissions AS s ON (ed.submission_id = s.submission_id);

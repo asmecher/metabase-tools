@@ -140,6 +140,7 @@ return [
 	    4 => 'Editing',
 	    5 => 'Production',
 	],
+	'review_rounds.stage_id' => $submissionStageIds,
 	'submissions.stage_id' => $submissionStageIds,
 	'users.must_change_password' => [0 => 'false', 1 => 'true'],
 	'users.disabled' => [0 => 'false', 1 => 'true'],
