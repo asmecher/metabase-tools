@@ -8,12 +8,12 @@ To use:
 2. Use `generate-views.sql` (adapted as necessary) to create a database with a set of views in it:
    1. Generate the SQL:
       ```sh
-      JOURNAL_PATH=abc php generate-views.sql
+      JOURNAL_PATH=abc php generate-views.php
       ```
    2. Review the output to make sure it's correct
    3. Run the SQL as e.g. root (because of required CREATE DATABASE / GRANT privileges):
       ```sh
-      JOURNAL_PATH=abc php generate-views.sql | sudo mysql
+      JOURNAL_PATH=abc php generate-views.php | sudo mysql
       ```
 3. Create the new database in Metabase:
    *You can get a Metabase API key by creating it in the Metabase web interface.*
