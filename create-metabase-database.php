@@ -22,6 +22,7 @@ $response = $client->request('POST', '/api/database', [
         'engine' => 'mysql',
         'name' => $config['journalPath'],
         'details' => [
+            'additional-options' => 'trustServerCertificate=true',
             'host' => $config['databases']['single']['host'],
             'db' => $config['databases']['single']['database'],
             'user' => $config['databases']['single']['username'],
@@ -88,7 +89,7 @@ $graph->groups->$groupId = (object) [
         'data' => [
             'schemas' => 'all',
             'native' => 'write',
-	],
+        ],
     ],
 ];
 
