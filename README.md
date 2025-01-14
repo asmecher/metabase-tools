@@ -5,7 +5,7 @@ In a hosting environment that uses OJS installations with multiple journals, hos
 
 To use:
 1. Configure `config/config.php` with details from your environment.
-2. Use `generate-views.sql` (adapted as necessary) to create a database with a set of views in it:
+2. Use `generate-views.php` to create a database with a set of views in it:
    1. Generate the SQL:
       ```sh
       JOURNAL_PATH=abc php generate-views.php
