@@ -48,11 +48,11 @@ foreach (array_keys($singleSm->listViews()) as $viewName) {
 
     $count = $metabaseConnection
         ->table('metabase_field AS f')
-	->join('metabase_table AS t', 'f.table_id', '=', 't.id')
-	->where('t.db_id', $databaseId)
-	->where('f.name', $primaryColumn)
-	->where('t.name', $viewName)
-	->update(['f.semantic_type' => 'type/PK']);
+        ->join('metabase_table AS t', 'f.table_id', '=', 't.id')
+        ->where('t.db_id', $databaseId)
+        ->where('f.name', $primaryColumn)
+        ->where('t.name', $viewName)
+        ->update(['f.semantic_type' => 'type/PK']);
 
     if ($count) echo " - $viewName.$primaryColumn\n";
 }
@@ -67,19 +67,19 @@ foreach ($config['foreignKeys'] as $foreignSpec => $primarySpec) {
 
     $count = $metabaseConnection
         ->table('metabase_field AS f_fk')
-	->join('metabase_table AS t_fk', 'f_fk.table_id', '=', 't_fk.id')
-	->join('metabase_database AS d', 't_fk.db_id', '=', 'd.id')
-	->join('metabase_table AS t_pk', 't_pk.db_id', '=', 'd.id')
-	->join('metabase_field AS f_pk', 't_pk.id', '=', 'f_pk.table_id')
-	->where('t_pk.name', $primaryTable)
-	->where('f_pk.name', $primaryColumn)
-	->where('t_fk.name', $foreignTable)
-	->where('f_fk.name', $foreignColumn)
-	->where('d.id', $databaseId)
-	->update([
-	    'f_fk.semantic_type' => 'type/FK',
-	    'f_fk.fk_target_field_id' => $metabaseConnection->raw('f_pk.id'),
-	]);
+        ->join('metabase_table AS t_fk', 'f_fk.table_id', '=', 't_fk.id')
+        ->join('metabase_database AS d', 't_fk.db_id', '=', 'd.id')
+        ->join('metabase_table AS t_pk', 't_pk.db_id', '=', 'd.id')
+        ->join('metabase_field AS f_pk', 't_pk.id', '=', 'f_pk.table_id')
+        ->where('t_pk.name', $primaryTable)
+        ->where('f_pk.name', $primaryColumn)
+        ->where('t_fk.name', $foreignTable)
+        ->where('f_fk.name', $foreignColumn)
+        ->where('d.id', $databaseId)
+        ->update([
+            'f_fk.semantic_type' => 'type/FK',
+            'f_fk.fk_target_field_id' => $metabaseConnection->raw('f_pk.id'),
+        ]);
 
     if ($count) echo " - $foreignSpec => $primarySpec\n";
 }
@@ -92,43 +92,45 @@ foreach ($config['enumerations'] as $columnSpec => $valueMap) {
     // Configure the metabase_fieldvalues and metabase_field entries. This is where
     // the list of possible options (and human-readable mappings) are entered.
     $count = $metabaseConnection
-	->table('metabase_fieldvalues AS fv')
-	->join('metabase_field AS f', 'fv.field_id', '=', 'f.id')
-	->join('metabase_table AS t', 'f.table_id', '=', 't.id')
-	->where('t.db_id', $databaseId)
-	->where('f.name', $columnName)
-	->where('t.name', $tableName)
-	->update([
-	    'f.semantic_type' => 'type/Enum',
-	    'f.has_field_values' => 'list',
-	    'fv.values' => json_encode(array_keys($valueMap)),
-	    'fv.human_readable_values' => json_encode(array_values($valueMap)),
-	]);
+        ->table('metabase_fieldvalues AS fv')
+        ->join('metabase_field AS f', 'fv.field_id', '=', 'f.id')
+        ->join('metabase_table AS t', 'f.table_id', '=', 't.id')
+        ->where('t.db_id', $databaseId)
+        ->where('f.name', $columnName)
+        ->where('t.name', $tableName)
+        ->update([
+            'f.semantic_type' => 'type/Enum',
+            'f.has_field_values' => 'list',
+            'fv.values' => json_encode(array_keys($valueMap)),
+            'fv.human_readable_values' => json_encode(array_values($valueMap)),
+        ]);
 
     if ($count) echo " - $columnSpec field values and field configured\n";
 
     // Configure the dimensions entry. This tells Metabase to present the user with
     // the human-readable forms.
     $result = $metabaseConnection
-	->table('metabase_field AS f')
-	->join('metabase_table AS t', 'f.table_id', '=', 't.id')
-	->leftJoin('dimension AS d', 'd.field_id', '=', 'f.id')
-	->where('t.db_id', $databaseId)
-	->where('f.name', $columnName)
-	->where('t.name', $tableName)
-	->select(['f.id AS field_id', 'f.name AS field_name', 'd.id AS dimension_id'])
-	->get();
+        ->table('metabase_field AS f')
+        ->join('metabase_table AS t', 'f.table_id', '=', 't.id')
+        ->leftJoin('dimension AS d', 'd.field_id', '=', 'f.id')
+        ->where('t.db_id', $databaseId)
+        ->where('f.name', $columnName)
+        ->where('t.name', $tableName)
+        ->select(['f.id AS field_id', 'f.name AS field_name', 'd.id AS dimension_id'])
+        ->get();
 
     if ($result->count() !== 1) throw new Exception("Could not identify field for $columnSpec!");
     $row = $result->first();
     if ($row->dimension_id === null) {
-	$metabaseConnection->table('dimension')->insert([
-	    'field_id' => $row->field_id,
-	    'name' => $row->field_name,
-	    'type' => 'internal',
-	    'entity_id' => $nanoClient->generateId(21), // This is a unique ID for import/export purposes
-	]);
-	echo " - $columnSpec received a new dimensions entry\n";
+        $metabaseConnection->table('dimension')->insert([
+            'field_id' => $row->field_id,
+            'created_at' => $metabaseConnection->raw('NOW()'),
+            'updated_at' => $metabaseConnection->raw('NOW()'),
+            'name' => $row->field_name,
+            'type' => 'internal',
+            'entity_id' => $nanoClient->generateId(21), // This is a unique ID for import/export purposes
+        ]);
+        echo " - $columnSpec received a new dimensions entry\n";
     }
 }
 
