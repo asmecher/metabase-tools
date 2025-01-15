@@ -23,7 +23,7 @@ $databaseId = getMetabaseDatabaseId($metabaseConnection, $config['journalPath'])
 $nanoClient = new NanoClient();
 
 // Get the set of default cards
-$defaultCards = require_once('default-cards.php');
+$defaultCards = require_once('config/default-cards.php');
 
 $client = new Client(['base_uri' => $config['metabase']['baseUrl']]);
 $headers = ['x-api-key' => $config['metabase']['apiKey']];
