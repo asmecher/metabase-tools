@@ -50,7 +50,7 @@ return [
 	'journal_settings.journal_id' => 'journals.journal_id',
 	'journals.current_issue_id' => 'issues.issue_id',
 	'publication_settings.publication_id' => 'publications.publication_id',
-	'publications.primary_contact_id' => 'users.user_id',
+	'publications.primary_contact_id' => 'authors.author_id',
 	'publications.section_id' => 'sections.section_id',
 	'publications.submission_id' => 'submissions.submission_id',
 	'section_settings.section_id' => 'sections.section_id',
