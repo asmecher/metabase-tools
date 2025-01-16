@@ -6,7 +6,6 @@
 
 use GuzzleHttp\Client;
 use Illuminate\Database\Capsule\Manager as Capsule;
-use Hidehalo\Nanoid\Client as NanoClient;
 
 require_once('vendor/autoload.php');
 require_once('includes/functions.php');
@@ -20,7 +19,6 @@ $capsule->addConnection($config['databases']['metabase'], 'metabase');
 $metabaseConnection = $capsule->getConnection('metabase');
 
 $databaseId = getMetabaseDatabaseId($metabaseConnection, $config['journalPath']);
-$nanoClient = new NanoClient();
 
 // Get the set of default cards
 $defaultCards = require_once('config/default-cards.php');
@@ -31,10 +29,10 @@ $headers = ['x-api-key' => $config['metabase']['apiKey']];
 // Create a card.
 echo "Creating cards...\n";
 foreach ($defaultCards as $card) {
-    echo " - {$card['name']}...\n";
+    echo " - {$card->getName()}...\n";
     $response = $client->request('POST', '/api/card', [
         'headers' => $headers,
-        'json' => $card,
+        'json' => $card->getJson(),
     ]);
     if ($code = $response->getStatusCode() != 200) {
         echo "Received an unexpected status code: $code!\n";
