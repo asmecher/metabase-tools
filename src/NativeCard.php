@@ -5,8 +5,6 @@ use Hidehalo\Nanoid\Client as NanoClient;
 require_once('src/MetabaseCard.php');
 
 abstract class NativeCard extends MetabaseCard {
-    abstract public function getName() : string;
-    abstract public function getDescription() : string;
     abstract public function getQuery() : string;
 
     /**
@@ -25,7 +23,7 @@ abstract class NativeCard extends MetabaseCard {
 	return [];
     }
 
-    public function getDatabaseQuery() : object
+    public function getDatasetQuery() : object
     {
         $nanoClient = new NanoClient();
         return (object) [

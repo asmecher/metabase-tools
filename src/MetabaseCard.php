@@ -13,9 +13,17 @@ abstract class MetabaseCard {
 	$this->databaseId = $databaseId;
     }
 
+    /**
+     * value must be a non-blank string.
+     */
     abstract public function getName() : string;
+
+    /**
+     * nullable value must be a non-blank string.
+     */
     abstract public function getDescription() : string;
-    abstract public function getDatabaseQuery() : object;
+
+    abstract public function getDatasetQuery() : object;
 
     /**
      * nullable value must be an integer greater than zero.
@@ -63,7 +71,7 @@ abstract class MetabaseCard {
         return (object) [
             'collection_id' => $this->getCollectionId(),
             'collection_position' => $this->getCollectionPosition(),
-            'dataset_query' => $this->getDatabaseQuery(),
+            'dataset_query' => $this->getDatasetQuery(),
             'name' => $this->getName(),
             'display' => $this->getDisplay(),
             'description' => $this->getDescription(),

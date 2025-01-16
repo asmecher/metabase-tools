@@ -30,7 +30,6 @@ $headers = ['x-api-key' => $config['metabase']['apiKey']];
 echo "Creating cards...\n";
 foreach ($defaultCards as $card) {
     echo " - {$card->getName()}...\n";
-    print_r($card->getJson());
     $response = $client->request('POST', '/api/card', [
         'headers' => $headers,
         'json' => $card->getJson(),
