@@ -9,6 +9,7 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 
 require_once('vendor/autoload.php');
 require_once('includes/functions.php');
+require_once('src/MetabaseSchema.php');
 
 // Load the configuration file
 $config = require_once('config/config.php');
@@ -20,11 +21,20 @@ $metabaseConnection = $capsule->getConnection('metabase');
 
 $databaseId = getMetabaseDatabaseId($metabaseConnection, $config['journalPath']);
 
-// Get the set of default cards
-$defaultCards = require_once('config/default-cards.php');
-
 $client = new Client(['base_uri' => $config['metabase']['baseUrl']]);
 $headers = ['x-api-key' => $config['metabase']['apiKey']];
+
+echo "Get schema descriptor... ";
+$response = $client->request('GET', '/api/database/' . $databaseId . '?include=tables.fields', ['headers' => $headers]);
+if ($code = $response->getStatusCode() != 200) {
+    echo "Received an unexpected status code: $code!\n";
+    exit();
+}
+$schema = new MetabaseSchema(json_decode($response->getBody()));
+echo "Done.\n";
+
+// Get the set of default cards
+$defaultCards = require_once('config/default-cards.php');
 
 // Create a card.
 echo "Creating cards...\n";

@@ -11,5 +11,5 @@ require_once('config/cards/ExampleQuestionCard.php');
 
 return [
     new ExampleSqlCard($databaseId),
-    new ExampleQuestionCard($databaseId),
+    new ExampleQuestionCard($databaseId, $schema),
 ];

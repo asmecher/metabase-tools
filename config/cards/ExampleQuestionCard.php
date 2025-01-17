@@ -3,8 +3,18 @@
 use Hidehalo\Nanoid\Client as NanoClient;
 
 require_once('src/QuestionCard.php');
+require_once('src/MetabaseSchema.php');
 
 class ExampleQuestionCard extends QuestionCard {
+    public int $submissionIdFieldId;
+    public int $publicationIdFieldId;
+
+    public function __construct(int $databaseId, public MetabaseSchema $schema) {
+	parent::__construct($databaseId);
+	$this->submissionIdFieldId = $this->schema->getFieldId('submissions', 'submission_id');
+	$this->publicationIdFieldId = $this->schema->getFieldId('publications', 'publication_id');
+    }
+
     public function getName() : string
     {
         return 'Example Question Card';
@@ -16,13 +26,13 @@ class ExampleQuestionCard extends QuestionCard {
 
     public function getSourceTable() : int
     {
-	return 330;
+	return $this->schema->getTableId('submissions');
     }
 
     public function getFields() : array
     {
 	return [
-	    ['field', 2455, (object) ['base-type' => 'type/BigInteger']],
+	    ['field', $this->submissionIdFieldId, (object) ['base-type' => 'type/BigInteger']],
 	];
     }
 
@@ -33,13 +43,13 @@ class ExampleQuestionCard extends QuestionCard {
 		'alias' => 'Publications - Current Publication',
 		'condition' => [
 		    '=',
-		    ['field', 2449, (object) ['base-type' => 'type/BigInteger']],
-		    ['field', 2399, (object) ['base-type' => 'type/BigInteger', 'join-alias' => 'Publications - Current Publication']],
+		    ['field', $this->schema->getFieldId('submissions', 'current_publication_id'), (object) ['base-type' => 'type/BigInteger']],
+		    ['field', $this->publicationIdFieldId, (object) ['base-type' => 'type/BigInteger', 'join-alias' => 'Publications - Current Publication']],
 		],
 		'fields' => [
-		    ['field', 2399, (object) ['base-type' => 'type/BigInteger', 'join-alias' => 'Publications - Current Publication']],
+		    ['field', $this->publicationIdFieldId, (object) ['base-type' => 'type/BigInteger', 'join-alias' => 'Publications - Current Publication']],
 		],
-		'source-table' => 338,
+		'source-table' => $this->schema->getTableId('publications'),
 		'strategy' => 'left-join',
 	    ],
 
@@ -55,22 +65,10 @@ class ExampleQuestionCard extends QuestionCard {
 		'description' => null,
 		'display_name' => 'Submission ID',
 		'effective_type' => 'type/BigInteger',
-		'field_ref' => ['field', 2455, ['base-type' => 'type/BigInteger']],
-		'fingerprint' => (object) [
-		    'global' => (object) ['distinct-count' => 10000, 'nil%' => 0],
-		    'type' => (object) [
-			'type/Number' => (object) [
-			    'avg' => 0,
-			    'max' => 100,
-			    'min' => -100,
-			    'q1' => 12345,
-			    'q3' => 123,
-			    'sd' => 45,
-			],
-		    ],
-		],
+		'field_ref' => ['field', $this->submissionIdFieldId, ['base-type' => 'type/BigInteger']],
+		'fingerprint' => $this->schema->getFieldFingerprint($this->submissionIdFieldId),
 		'fk_target_field_id' => null,
-		'id' => 2455,
+		'id' => $this->submissionIdFieldId,
 	        'name' => 'submission_id',
 		'semantic_type' => 'type/PK',
 		'settings' => null,
@@ -80,24 +78,12 @@ class ExampleQuestionCard extends QuestionCard {
 		'base_type' => 'type/BigInteger',
 		'coercion_strategy' => null,
 		'description' => null,
-		'display_name' => 'Publications - Current Publication -> Publication ID',
+		'display_name' => 'Current Publication ID',
 		'effective_type' => 'type/BigInteger',
-		'field_ref' => ['field', 2399, ['base-type' => 'type/BigInteger', 'join-alias' => 'Publications - Current Publication']],
-		'fingerprint' => (object) [
-		    'global' => (object) ['distinct-count' => 10000, 'nil%' => 0],
-		    'type' => (object) [
-			'type/Number' => (object) [
-			    'avg' => 0,
-			    'max' => 100,
-			    'min' => -100,
-			    'q1' => 12345,
-			    'q3' => 123,
-			    'sd' => 45,
-			],
-		    ],
-		],
+		'field_ref' => ['field', $this->publicationIdFieldId, ['base-type' => 'type/BigInteger', 'join-alias' => 'Publications - Current Publication']],
+		'fingerprint' => $this->schema->getFieldFingerprint($this->publicationIdFieldId),
 		'fk_target_field_id' => null,
-		'id' => 2399,
+		'id' => $this->publicationIdFieldId,
 	        'name' => 'publication_id',
 		'semantic_type' => 'type/PK',
 		'settings' => null,
@@ -106,5 +92,14 @@ class ExampleQuestionCard extends QuestionCard {
 	];
     }
 
+    public function getVisualizationSettings() : object {
+	return (object) [
+	    'column_settings' => (object) [
+		'["name", "publication_id"]' => (object) [
+		    'column_title' => 'Current Publication ID',
+		],
+	    ]
+	];
+    }
 }
 
