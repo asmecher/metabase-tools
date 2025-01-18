@@ -31,8 +31,7 @@ $response = $client->request('POST', '/api/database', [
     ],
 ]);
 if ($code = $response->getStatusCode() != 200) {
-    echo "Received an unexpected status code: $code!\n";
-    exit();
+    throw new \Exception("Received an unexpected status code: $code!\n");
 }
 $json = json_decode($response->getBody());
 $newDatabaseId = $json->id;
@@ -45,8 +44,7 @@ $response = $client->request('POST', '/api/permissions/group', [
     'json' => ['name' => $config['journalPath']],
 ]);
 if ($code = $response->getStatusCode() != 200) {
-    echo "Received an unexpected status code: $code!\n";
-    exit();
+    throw new \Exception("Received an unexpected status code: $code!\n");
 }
 $json = json_decode($response->getBody());
 $groupId = $json->id;
@@ -57,8 +55,7 @@ echo "Identifying groups...\n";
 // Get the group list.
 $response = $client->request('GET', '/api/permissions/group', ['headers' => $headers]);
 if ($code = $response->getStatusCode() != 200) {
-    echo "Received an unexpected status code: $code!\n";
-    exit();
+    throw new \Exception("Received an unexpected status code: $code!\n");
 }
 $groups = json_decode($response->getBody(), true); // as array
 $adminGroupId = array_reduce($groups, fn($carry, $item) => $item['name'] == 'Administrators' ? $item['id'] : $carry);
@@ -70,8 +67,7 @@ if (!$adminGroupId) throw new Exception("Unable to identify 'All Users' group!")
 echo "Getting the All Users permission graph...\n";
 $response = $client->request('GET', '/api/permissions/graph', ['headers' => $headers]);
 if ($code = $response->getStatusCode() != 200) {
-    echo "Received an unexpected status code: $code!\n";
-    exit();
+    throw new \Exception("Received an unexpected status code: $code!\n");
 }
 $graph = json_decode($response->getBody());
 
@@ -112,8 +108,7 @@ $response = $client->request('PUT', '/api/permissions/graph', [
     'json' => $graph,
 ]);
 if ($code = $response->getStatusCode() != 200) {
-    echo "Received an unexpected status code: $code!\n";
-    exit();
+    throw new \Exception("Received an unexpected status code: $code!\n");
 }
 echo "Done!\n";
 
