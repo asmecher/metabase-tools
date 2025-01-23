@@ -1,9 +1,20 @@
-# metabase-tools
+# Metabase tools for OJS
 Configuration tools for Metabase when working with large journal collections without a common editorial team.
 
 In a hosting environment that uses OJS installations with multiple journals, hosts might want to support Metabase as a way for editors to build and run reports or explore the workflow data. However, hosts need to ensure that data from other journals is not exposed to editors. This toolset uses views to segment the main OJS database into derived databases that Metabase can explore freely without exposing unwanted data.
 
-To use:
+## Setting up a Metabase environment for a single journal
+### Required API keys
+
+You will require *two* API keys for the following steps:
+
+- A Metabase API key created through the Metabase web interface (see `METABASE_API_KEY` below)
+- A Metabase API key provided to Metabase through the command line when starting it up (see `METABASE_MB_API_KEY` below)
+
+**These two API keys are not the same!**
+
+### Running the steps
+
 1. Configure `config/config.php` with details from your environment.
 2. Use `generate-views.php` to create a database with a set of views in it:
    1. Generate the SQL:
@@ -34,7 +45,12 @@ To use:
    ```sh
    JOURNAL_PATH=abc php configure-metabase.php
    ```
-8. Run `create-default-cards.php` to create a set of reports/queries for the new database.
+### Copying cards
+
+A "card" is the collective Metabase term for questions, models, and visualizations. You'll probably want to create some default cards in the newly created database. You can copy these from somewhere else in the same Metabase installation.
+
+1. Determine the ID of the card you want to copy. The quickest way to do this is inspecting the link to the card. This will contain both the ID and an indication of the title. For example, a card called "Submissions with status by month" might have a URL like `.../question/82-submissions-with-status-by-month`. The ID in this case is `82`.
+2. Use the `copy-card` script to copy it to your new database:
    ```sh
-   METABASE_API_KEY="abcdefg" JOURNAL_PATH=abc php create-default-cards.php
+   METABASE_API_KEY="abcdefg" JOURNAL_PATH=abc php copy-card.php 123
    ```
