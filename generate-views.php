@@ -20,7 +20,7 @@ $sm = $db->createSchemaManager();
 $multiDatabaseName = $config['databases']['multi']['database'];
 
 echo "CREATE DATABASE IF NOT EXISTS `{$config['databases']['single']['database']}` DEFAULT CHARACTER SET utf8;
-CREATE USER `{$config['databases']['single']['username']}`@`{$config['databases']['single']['host']}` IDENTIFIED BY " . $db->quote($config['databases']['single']['password']) . ";
+CREATE USER IF NOT EXISTS `{$config['databases']['single']['username']}`@`{$config['databases']['single']['host']}` IDENTIFIED BY " . $db->quote($config['databases']['single']['password']) . ";
 GRANT SELECT ON `{$config['databases']['single']['database']}`.* TO `{$config['databases']['single']['username']}`@`{$config['databases']['single']['host']}`;
 USE `{$config['databases']['single']['database']}`;
 CREATE OR REPLACE VIEW journals AS SELECT j.* FROM {$multiDatabaseName}.journals AS j WHERE j.path=" . $db->quote($config['journalPath']) . ";
