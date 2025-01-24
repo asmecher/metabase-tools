@@ -50,7 +50,9 @@ You will require *two* API keys for the following steps:
 A "card" is the collective Metabase term for questions, models, and visualizations. You'll probably want to create some default cards in the newly created database. You can copy these from somewhere else in the same Metabase installation.
 
 1. Determine the ID of the card you want to copy. The quickest way to do this is inspecting the link to the card. This will contain both the ID and an indication of the title. For example, a card called "Submissions with status by month" might have a URL like `.../question/82-submissions-with-status-by-month`. The ID in this case is `82`.
+2. Determine the ID of the collection you want to place it into. Do this similarly to the above step.
 2. Use the `copy-card` script to copy it to your new database:
    ```sh
-   METABASE_API_KEY="abcdefg" JOURNAL_PATH=abc php copy-card.php 123
+   METABASE_API_KEY="abcdefg" JOURNAL_PATH=abc php copy-card.php 123 456
    ```
+   ...where `123` is the card ID and `456` is the collection ID.

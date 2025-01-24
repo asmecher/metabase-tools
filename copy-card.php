@@ -26,6 +26,9 @@ $databaseId = getMetabaseDatabaseId($metabaseConnection, $config['journalPath'])
 $sourceCardId = intval($argv[1]) ?? null;
 if (!$sourceCardId) throw new \Exception('Please specify the source card ID on the command line.');
 
+$targetCollectionId = intval($argv[2]) ?? null;
+if (!$targetCollectionId) throw new \Exception('Please specify the target collection ID on the command line.');
+
 $client = new Client(['base_uri' => $config['metabase']['baseUrl']]);
 $headers = ['x-api-key' => $config['metabase']['apiKey']];
 
@@ -79,6 +82,7 @@ foreach ($card->{'result_metadata'} as &$entry) {
     }
 }
 unset($card->id);
+$card->collection_id = $targetCollectionId;
 
 fputs($stderr, "Adding the modified card... ");
 $response = $client->request('POST', '/api/card', ['headers' => $headers, 'json' => $card]);
