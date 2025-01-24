@@ -112,3 +112,42 @@ if ($code = $response->getStatusCode() != 200) {
 }
 echo "Done!\n";
 
+// Create a collection in Metabase.
+echo "Creating collection...\n";
+$response = $client->request('POST', '/api/collection', [
+    'headers' => $headers,
+    'json' => ['name' => $config['journalPath']],
+]);
+if ($code = $response->getStatusCode() != 200) {
+    throw new \Exception("Received an unexpected status code: $code!\n");
+}
+$json = json_decode($response->getBody());
+$collectionId = $json->id;
+echo "Done! URL: {$config['metabase']['baseUrl']}/collection/{$collectionId}\n";
+
+// Get the current permissions graph.
+echo "Getting the collection permission graph...\n";
+$response = $client->request('GET', '/api/collection/graph', ['headers' => $headers]);
+if ($code = $response->getStatusCode() != 200) {
+    throw new \Exception("Received an unexpected status code: $code!\n");
+}
+$graph = json_decode($response->getBody());
+
+// Remove collection access for All Users
+$graph->groups->$allUsersGroupId->$collectionId = 'none';
+
+// Grant collection access for new group
+$graph->groups->$groupId->$collectionId = 'write';
+
+// Post the modified permissions back to Metabase.
+echo "Posting modified collection permissions...\n";
+$response = $client->request('PUT', '/api/collection/graph', [
+    'headers' => $headers,
+    'json' => $graph,
+]);
+if ($code = $response->getStatusCode() != 200) {
+    throw new \Exception("Received an unexpected status code: $code!\n");
+}
+echo "Done!\n";
+
+
