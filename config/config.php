@@ -18,6 +18,7 @@ return [
     ],
     // The journal path that you wish to expose via views for Metabase to analyze.
     'journalPath' => getenv('JOURNAL_PATH'),
+    'materializedViews' => false, // true to materialize tables; false to use views.
     'databases' => [
 	// This is the multi-journal installation
 	'multi' => array_merge($dbDefaults, [
