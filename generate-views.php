@@ -35,6 +35,9 @@ CREATE {$tableOrView} journal_settings AS SELECT js.* FROM {$multiDatabaseName}.
 DROP {$tableOrView} IF EXISTS submissions;
 CREATE {$tableOrView} submissions AS SELECT s.* FROM {$multiDatabaseName}.submissions AS s JOIN journals j ON (s.context_id = j.journal_id);
 
+DROP {$tableOrView} IF EXISTS genres;
+CREATE {$tableOrView} genres AS SELECT g.* FROM {$multiDatabaseName}.genres AS g JOIN journals j ON (g.context_id = j.journal_id);
+
 DROP {$tableOrView} IF EXISTS submission_settings;
 CREATE {$tableOrView} submission_settings AS SELECT ss.* FROM {$multiDatabaseName}.submission_settings AS ss JOIN submissions AS s ON (ss.submission_id = s.submission_id);
 
@@ -47,6 +50,9 @@ CREATE {$tableOrView} publication_settings AS SELECT ps.* FROM {$multiDatabaseNa
 DROP {$tableOrView} IF EXISTS review_rounds;
 CREATE {$tableOrView} review_rounds AS SELECT rr.* FROM {$multiDatabaseName}.review_rounds AS rr JOIN submissions AS s ON (rr.submission_id = s.submission_id);
 
+DROP {$tableOrView} IF EXISTS review_round_files;
+CREATE {$tableOrView} review_round_files AS SELECT rrf.* FROM {$multiDatabaseName}.review_round_files AS rrf JOIN review_rounds AS rr ON (rrf.review_round_id = rr.review_round_id);
+
 DROP {$tableOrView} IF EXISTS authors;
 CREATE {$tableOrView} authors AS SELECT a.* FROM {$multiDatabaseName}.authors AS a JOIN publications AS p ON (a.publication_id = p.publication_id);
 
@@ -55,6 +61,12 @@ CREATE {$tableOrView} author_settings AS SELECT a_s.* FROM {$multiDatabaseName}.
 
 DROP {$tableOrView} IF EXISTS edit_decisions;
 CREATE {$tableOrView} edit_decisions AS SELECT ed.* FROM {$multiDatabaseName}.edit_decisions AS ed JOIN submissions AS s ON (ed.submission_id = s.submission_id);
+
+DROP {$tableOrView} IF EXISTS submission_files;
+CREATE {$tableOrView} submission_files AS SELECT sf.* FROM {$multiDatabaseName}.submission_files AS sf JOIN submissions AS s ON (sf.submission_id = s.submission_id);
+
+DROP {$tableOrView} IF EXISTS files;
+CREATE {$tableOrView} files AS SELECT f.* FROM {$multiDatabaseName}.files AS f JOIN submission_files AS sf ON (f.file_id = sf.file_id);
 
 DROP {$tableOrView} IF EXISTS issues;
 CREATE {$tableOrView} issues AS SELECT i.* FROM {$multiDatabaseName}.issues AS i JOIN journals j ON (i.journal_id = j.journal_id);
