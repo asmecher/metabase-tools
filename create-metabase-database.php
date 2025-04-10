@@ -11,13 +11,12 @@ require_once('vendor/autoload.php');
 // Load the configuration file
 $config = require_once('config/config.php');
 
-$client = new Client(['base_uri' => $config['metabase']['baseUrl']]);
 $headers = ['x-api-key' => $config['metabase']['apiKey']];
+$client = new Client(['base_uri' => $config['metabase']['baseUrl'], 'headers' => $headers]);
 
 // Create the database in Metabase.
 echo "Creating Metabase database for {$config['journalPath']}...\n";
 $response = $client->request('POST', '/api/database', [
-    'headers' => $headers,
     'json' => [
         'engine' => 'mysql',
         'name' => $config['journalPath'],
@@ -40,7 +39,6 @@ echo "Done! URL: {$config['metabase']['baseUrl']}/admin/databases/{$newDatabaseI
 // Create the user group in Metabase.
 echo "Creating group...\n";
 $response = $client->request('POST', '/api/permissions/group', [
-    'headers' => $headers,
     'json' => ['name' => $config['journalPath']],
 ]);
 if ($code = $response->getStatusCode() != 200) {
@@ -53,7 +51,7 @@ echo "Done! URL: {$config['metabase']['baseUrl']}/admin/permissions/data/group/{
 // Identify the 'Administrators' and 'All Users' group IDs, in order to correctly adjust permissions.
 echo "Identifying groups...\n";
 // Get the group list.
-$response = $client->request('GET', '/api/permissions/group', ['headers' => $headers]);
+$response = $client->request('GET', '/api/permissions/group');
 if ($code = $response->getStatusCode() != 200) {
     throw new \Exception("Received an unexpected status code: $code!\n");
 }
@@ -65,7 +63,7 @@ if (!$adminGroupId) throw new Exception("Unable to identify 'All Users' group!")
 
 // Get the current permissions graph.
 echo "Getting the All Users permission graph...\n";
-$response = $client->request('GET', '/api/permissions/graph', ['headers' => $headers]);
+$response = $client->request('GET', '/api/permissions/graph');
 if ($code = $response->getStatusCode() != 200) {
     throw new \Exception("Received an unexpected status code: $code!\n");
 }
@@ -103,10 +101,7 @@ foreach ($graph->groups->$groupId as $databaseId => $databasePermissions) {
 
 // Post the modified permissions back to Metabase.
 echo "Posting modified permissions...\n";
-$response = $client->request('PUT', '/api/permissions/graph', [
-    'headers' => $headers,
-    'json' => $graph,
-]);
+$response = $client->request('PUT', '/api/permissions/graph', ['json' => $graph]);
 if ($code = $response->getStatusCode() != 200) {
     throw new \Exception("Received an unexpected status code: $code!\n");
 }
@@ -114,10 +109,7 @@ echo "Done!\n";
 
 // Create a collection in Metabase.
 echo "Creating collection...\n";
-$response = $client->request('POST', '/api/collection', [
-    'headers' => $headers,
-    'json' => ['name' => $config['journalPath']],
-]);
+$response = $client->request('POST', '/api/collection', ['json' => ['name' => $config['journalPath']]]);
 if ($code = $response->getStatusCode() != 200) {
     throw new \Exception("Received an unexpected status code: $code!\n");
 }
@@ -127,7 +119,7 @@ echo "Done! URL: {$config['metabase']['baseUrl']}/collection/{$collectionId}\n";
 
 // Get the current permissions graph.
 echo "Getting the collection permission graph...\n";
-$response = $client->request('GET', '/api/collection/graph', ['headers' => $headers]);
+$response = $client->request('GET', '/api/collection/graph');
 if ($code = $response->getStatusCode() != 200) {
     throw new \Exception("Received an unexpected status code: $code!\n");
 }
@@ -141,10 +133,7 @@ $graph->groups->$groupId->$collectionId = 'write';
 
 // Post the modified permissions back to Metabase.
 echo "Posting modified collection permissions...\n";
-$response = $client->request('PUT', '/api/collection/graph', [
-    'headers' => $headers,
-    'json' => $graph,
-]);
+$response = $client->request('PUT', '/api/collection/graph', ['json' => $graph]);
 if ($code = $response->getStatusCode() != 200) {
     throw new \Exception("Received an unexpected status code: $code!\n");
 }

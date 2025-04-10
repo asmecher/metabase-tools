@@ -34,7 +34,7 @@ You will require *two* API keys for the following steps:
 4. Sync the database:
    *Note that `METABASE_MB_API_KEY` is NOT the same thing as the API key you create in the web interface for Metabase. It needs to be provided to Metabase when it is started using the [`MB_API_KEY`](https://www.metabase.com/docs/latest/configuring-metabase/environment-variables#mb_api_key) environment variable. It can be anything you like.*
    ```sh
-   METABASE_MB_API_KEY="xyz123" JOURNAL_PATH=abc php sync-database.php
+   MB_API_KEY="abcdefg" METABASE_MB_API_KEY="xyz123" JOURNAL_PATH=abc php sync-database.php
    ```
 5. Set the visibility for all tables in the new database:
    ```sh

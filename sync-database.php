@@ -13,21 +13,14 @@ require_once('includes/functions.php');
 // Load the configuration file
 $config = require_once('config/config.php');
 
+$headers = ['x-api-key' => $config['metabase']['apiKey'], 'x-metabase-apikey' => $config['metabase']['mbApiKey']];
+$client = new Client(['base_uri' => $config['metabase']['baseUrl'], 'headers' => $headers]);
 
-// Establish the database connection for metabase installation
-$capsule = new Capsule;
-$capsule->addConnection($config['databases']['metabase'], 'metabase');
-$metabaseConnection = $capsule->getConnection('metabase');
-
-$databaseId = getMetabaseDatabaseId($metabaseConnection, $config['journalPath']);
-
-$client = new Client(['base_uri' => $config['metabase']['baseUrl']]);
-$headers = ['x-metabase-apikey' => $config['metabase']['mbApiKey']];
+$databaseId = getMetabaseDatabaseId_API($client, $config['journalPath']);
 
 // Create the database in Metabase.
 echo "Syncing database...\n";
 $response = $client->request('POST', "/api/notify/db/{$databaseId}", [
-    'headers' => $headers,
     'json' => [
         'scan' => 'full',
         'synchronous' => 1,

@@ -33,7 +33,7 @@ $metabaseConnection = $capsule->getConnection('metabase');
 $singleSm = $singleConnection->getDoctrineSchemaManager();
 $multiSm = $multiConnection->getDoctrineSchemaManager();
 
-$databaseId = getMetabaseDatabaseId($metabaseConnection, $config['journalPath']);
+$databaseId = getMetabaseDatabaseId_DB($metabaseConnection, $config['journalPath']);
 
 // For each view in the single-journal installation, determine what the primary key should be and configure it in Metabase.
 echo "Identifying primary keys and setting configuration in Metabase...\n";

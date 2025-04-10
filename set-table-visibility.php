@@ -5,9 +5,6 @@
  */
 
 use GuzzleHttp\Client;
-use Illuminate\Database\Capsule\Manager as Capsule;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 
 require_once('vendor/autoload.php');
 require_once('includes/functions.php');
@@ -17,18 +14,13 @@ $config = require_once('config/config.php');
 
 $stderr = fopen('php://stderr', 'w');
 
-// Establish the database connection for metabase installation
-$capsule = new Capsule;
-$capsule->addConnection($config['databases']['metabase'], 'metabase');
-$metabaseConnection = $capsule->getConnection('metabase');
-
-$databaseId = getMetabaseDatabaseId($metabaseConnection, $config['journalPath']);
-
-$client = new Client(['base_uri' => $config['metabase']['baseUrl']]);
 $headers = ['x-api-key' => $config['metabase']['apiKey']];
+$client = new Client(['base_uri' => $config['metabase']['baseUrl'], 'headers' => $headers]);
+
+$databaseId = getMetabaseDatabaseId_API($client, $config['journalPath']);
 
 fputs($stderr, "Getting schema for database ID $databaseId... ");
-$response = $client->request('GET', "/api/database/{$databaseId}/schema/?include_hidden=true", ['headers' => $headers]);
+$response = $client->request('GET', "/api/database/{$databaseId}/schema/?include_hidden=true");
 if ($code = $response->getStatusCode() != 200) {
     throw new \Exception("Received an unexpected status code: $code!\n");
 }
@@ -43,7 +35,7 @@ foreach ($schema as $schemaEntry) {
 
 if (!empty($tableIds)) {
     fputs($stderr, "Resetting visibility for tables " . json_encode($tableIds) . "... ");
-    $response = $client->request('PUT', '/api/table', ['headers' => $headers, 'json' => (object) ['ids' => $tableIds, 'visibility_type' => null]]);
+    $response = $client->request('PUT', '/api/table', ['json' => (object) ['ids' => $tableIds, 'visibility_type' => null]]);
     if ($code = $response->getStatusCode() != 200) {
         throw new \Exception("Received an unexpected status code: $code!\n");
     }
