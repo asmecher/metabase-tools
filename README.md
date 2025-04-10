@@ -38,7 +38,7 @@ You will require *two* API keys for the following steps:
    ```
 5. Set the visibility for all tables in the new database:
    ```sh
-   JOURNAL_PATH=abc php set-table-visibility.php
+   METABASE_API_KEY="abcdefg" JOURNAL_PATH=abc php set-table-visibility.php
    ```
 6. Sync the database again as in step 4.
 7. Run `configure-metabase.php` to update Metabase's configuration. (This can also be used to sync changes back to Metabase after e.g. an addition to `config.inc.php` or an inadvertent change in the Metabase configuration.)
